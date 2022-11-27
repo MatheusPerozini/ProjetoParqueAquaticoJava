@@ -6,25 +6,37 @@ package VIEW;
 
 import java.awt.Dimension;
 import javax.swing.JOptionPane;
-import java.text.SimpleDateFormat;  
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
 
 import CTR.ClienteCTR;
 import DTO.ClienteDTO;
+import DTO.FuncionarioDTO;
+
 /**
  *
  * @author Heitor
  */
 public class ClienteVIEW extends javax.swing.JInternalFrame {
+
     ClienteDTO clienteDTO = new ClienteDTO();
     ClienteCTR clienteCTR = new ClienteCTR();
+    
+    DefaultTableModel modeloJtlConsultarCliente;
+    int gravar_alterar;
+    ResultSet rs;
+
     /**
      * Creates new form ClienteVIEW
      */
     public ClienteVIEW() {
         initComponents();
+        this.liberaCampos(false);
+        this.liberaBotoes(true, false, false, false, true);
+        this.gravar_alterar = 1;
+        modeloJtlConsultarCliente = (DefaultTableModel) this.jtl_consultar_cliente.getModel();
     }
 
     public void setPosition() {
@@ -32,8 +44,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
 
         this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -353,7 +364,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_nomeActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        
+
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void jtl_consultar_clienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtl_consultar_clienteMouseClicked
@@ -377,107 +388,110 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-//        private void alterar(){
-//        try {
-//            clienteDTO.setNome(this.inputNome.getText());
-//            clienteDTO.setLogradouro(this.inputLogradouro.getText());
-//            clienteDTO.setBairro(this.inputBairro.getText());
-//            clienteDTO.setCep(this.inputCEP.getText());
-//            clienteDTO.setCidade(this.inputCidade.getText());
-//            clienteDTO.setCpf(this.inputCPF.getText());
-//            clienteDTO.setEstado(this.inputEstado.getSelectedItem().toString());
-//            clienteDTO.setNumero(Integer.parseInt(this.inputNumero.getText()));
-//            clienteDTO.setRg(this.inputRG.getText());
-//            
-//            JOptionPane.showMessageDialog(null, 
-//                    this.clienteCTR.alterarCliente(clienteDTO));
-//        } catch(Exception e){
-//            System.out.println("Erro alterar()"+ e.getMessage());
-//        }
-//    }
-    
-//    private void excluir(){
-//        if(JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?", "Aviso", 
-//                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
-//            JOptionPane.showMessageDialog(null, this.clienteCTR.excluirCliente(clienteDTO));
-//        }
-//    }
-    
-//    private void preencherTabela(String nome){
-//        try {
-//            this.modeloJtlConsultarCliente.setNumRows(0);
-//            
-//            clienteDTO.setNome(nome);
-//            rs = clienteCTR.consultarCliente(clienteDTO, 1);
-//            
-//            while(rs.next()){
-//                this.modeloJtlConsultarCliente.addRow(new Object[] {
-//                    rs.getString("id_cliente"),
-//                    rs.getString("nome")
-//                });
-//            }
-//        } catch(Exception e){
-//            System.out.println("Erro preencherTabela(): " + e.getMessage());
-//        } finally{
-//            clienteCTR.CloseDB();
-//        }
-//    }
-    
-//    private void preencherCampos(int id_cliente){
-//        try{
-//            this.clienteDTO.setId_cliente(id_cliente);
-//            rs = this.clienteCTR.consultar(clienteDTO, 2);
-//            if(rs.next()){
-//                this.limpaCampos();
-//                
-//                this.inputBairro.setText(rs.getString("bairro"));
-//                this.inputCEP.setText(rs.getString("cep"));
-//                this.inputCPF.setText(rs.getString("cpf"));
-//                this.inputCidade.setText(rs.getString("cidade"));
-//                this.inputEstado.setSelectedItem(rs.getString("estado"));
-//                this.inputLogradouro.setText(rs.getString("logradouro"));
-//                this.inputNome.setText(rs.getString("nome"));
-//                this.inputNumero.setText(rs.getString("numero"));
-//                this.inputRG.setText(rs.getString("rg"));
-//                
-//                this.gravar_alterar = 2;
-//                this.liberaCampos(true);
-//            }
-//        } catch(Exception e){
-//            System.out.println("Erro: " + e.getMessage());
-//        } finally {
-//            this.clienteCTR.CloseDB();
-//        } 
-//    }
-    
-    private void gravar(){
+        private void alterar(){
         try {
             clienteDTO.setNome(this.nome.getText());
             clienteDTO.setCpf(this.cpf.getText());
             clienteDTO.setEmail(this.email.getText());
-            clienteDTO.setData_nascimento( new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
-            JOptionPane.showMessageDialog(null, clienteCTR.inserir(clienteDTO));
+            clienteDTO.setTelefone(this.telefone.getText());
+            clienteDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
+            
+            JOptionPane.showMessageDialog(null, 
+                    this.clienteCTR.alterar(clienteDTO));
         } catch(Exception e){
-            System.out.println("Erro gravar(): " + e.getMessage());
+            System.out.println("Erro alterar()"+ e.getMessage());
+        }
+    }
+    private void excluir(){
+        if(JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?", "Aviso", 
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            JOptionPane.showMessageDialog(null, this.clienteCTR.deletar(clienteDTO));
         }
     }
     
-        private void liberaCampos(boolean a){
+    private void preencherTabela(String nome){
+        try {
+            this.modeloJtlConsultarCliente.setNumRows(0);
+            
+            clienteDTO.setNome(nome);
+            rs = clienteCTR.consultar(clienteDTO, 1);
+            
+            while(rs.next()){
+                this.modeloJtlConsultarCliente.addRow(new Object[] {
+                    rs.getString("id_cliente"),
+                    rs.getString("nome")
+                });
+            }
+        } catch(Exception e){
+            System.out.println("Erro preencherTabela(): " + e.getMessage());
+        } finally{
+            clienteCTR.CloseDB();
+        }
+    }
+    
+    private void preencherCampos(int id_cliente) {
+        try {
+            this.clienteDTO.setId_cliente(id_cliente);
+            rs = this.clienteCTR.consultar(clienteDTO, 2);
+            if (rs.next()) {
+                this.limpaCampos();
+
+                this.nome.setText(rs.getString("nome"));
+                this.cpf.setText(rs.getString("cep"));
+                this.telefone.setText(rs.getString("telefone"));
+                this.data_nascimento.setText(rs.getString("data_nascimento"));
+                this.email.setText(rs.getString("email"));
+                
+                this.clienteDTO.setId_cliente(Integer.parseInt(rs.getString("id_cliente")));
+
+                this.gravar_alterar = 2;
+                this.liberaCampos(true);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        } finally {
+            this.clienteCTR.CloseDB();
+        }
+    }
+
+    private void gravar() {
+        try {
+            clienteDTO.setNome(this.nome.getText());
+            clienteDTO.setCpf(this.cpf.getText());
+            clienteDTO.setEmail(this.email.getText());
+            clienteDTO.setTelefone(this.telefone.getText());
+            clienteDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
+            clienteDTO.setId_funcionario(FuncionarioDTO.id_funcionario_logado);
+            JOptionPane.showMessageDialog(null, clienteCTR.inserir(clienteDTO));
+        } catch (Exception e) {
+            System.out.println("Erro gravar(): " + e.getMessage());
+        }
+    }
+
+    private void liberaBotoes(boolean a, boolean b, boolean c, boolean d, boolean e) {
+        this.btnNovo.setEnabled(a);
+        this.btnCancelar.setEnabled(b);
+        this.btnExcluir.setEnabled(d);
+        this.btnSair.setEnabled(e);
+        this.btnSalvar.setEnabled(c);
+    }
+
+    private void liberaCampos(boolean a) {
         this.nome.setEnabled(a);
         this.cpf.setEnabled(a);
         this.email.setEnabled(a);
         this.telefone.setEnabled(a);
         this.data_nascimento.setEnabled(a);
     }
-    
-    private void limpaCampos(){
+
+    private void limpaCampos() {
         this.nome.setText("");
         this.cpf.setText("");
         this.email.setText("");
