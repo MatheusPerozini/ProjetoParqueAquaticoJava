@@ -5,7 +5,10 @@ import java.awt.Image;
 import java.awt.Graphics;
 import javax.swing.ImageIcon;
 
+import CTR.BackupCTR;
+
 public class IndexVIEW extends javax.swing.JFrame {
+    BackupCTR backupCTR = new BackupCTR();
 
     /**
      * Creates new form IndexVIEW
@@ -198,11 +201,11 @@ public class IndexVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_menuSairMouseClicked
 
     private void restaurarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restaurarActionPerformed
-        // TODO add your handling code here:
+        this.backupCTR.confirmaRestaurarBackup();
     }//GEN-LAST:event_restaurarActionPerformed
 
     private void gerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gerarActionPerformed
-        // TODO add your handling code here:
+        this.backupCTR.confirmaBackup();
     }//GEN-LAST:event_gerarActionPerformed
 
     private void menuBackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBackupActionPerformed

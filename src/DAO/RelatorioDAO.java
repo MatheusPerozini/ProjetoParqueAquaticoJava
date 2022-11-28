@@ -93,10 +93,12 @@ public class RelatorioDAO {
 		try {
 			ConexaoDAO.conectDb();
 			stmt = ConexaoDAO.con.createStatement();
-			String comando = "select count(*) from cliente where data_criacao between '1_ " + mes_inicio + "_" + ano
-					+ "' and " + " '1_" + mes_fim + "_" + ano + "'";
+			String comando = "select count(*) from cliente where data_criacao between '1-" + mes_inicio + "-" + ano
+					+ "' and " + " '30-" + mes_fim + "-" + ano + "'";
+                        System.out.println("inicio " + mes_inicio + " fim " + mes_fim + " ano " + ano);
 			rs = stmt.executeQuery(comando.toUpperCase());
 			while (rs.next()) {
+                                System.out.println("DAO.RelatorioDAO.retornarNumeroDeClientesPorMesEAno(): " + rs.getString("count"));
 				numeroDeClientes = Integer.parseInt(rs.getString("count"));
 			}
 			return numeroDeClientes;

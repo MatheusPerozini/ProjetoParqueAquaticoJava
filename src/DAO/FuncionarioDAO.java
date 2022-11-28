@@ -54,13 +54,13 @@ public class FuncionarioDAO implements BasicDAO<FuncionarioDTO> {
             boolean resultado = false;
             ConexaoDAO.conectDb();
             stmt = ConexaoDAO.con.createStatement();
-            String comando = "select cpf, senha from funcionario where cpf = " + "'" + funcionario.getCpf() + "'";
+            String comando = "select id_funcionario, cpf, senha from funcionario where cpf = " + "'" + funcionario.getCpf() + "';";
             rs = stmt.executeQuery(comando.toUpperCase());
             while (rs.next()) {
                 if (rs.getString("cpf").equals(funcionario.getCpf())) {
                     if (HashSenhaDAO.verifyUserPassword(funcionario.getSenha(), rs.getString("senha"),
                             this.senheSaltValue)) {
-                        id_funcionario = Integer.parseInt(rs.getString(id_funcionario));
+                        id_funcionario = Integer.parseInt(rs.getString("id_funcionario"));
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class FuncionarioDAO implements BasicDAO<FuncionarioDTO> {
             switch (opcao) {
                 case 1:
                     comando = "select f.* from funcionario f "
-                            + "where nome like '" + t.getNome() + "%' "
+                            + "where nome ilike '" + t.getNome() + "%' "
                             + "order by f.nome";
                     break;
                 case 2:

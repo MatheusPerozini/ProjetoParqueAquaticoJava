@@ -10,6 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
+import java.text.ParseException;
 
 import CTR.ClienteCTR;
 import DTO.ClienteDTO;
@@ -23,7 +27,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
 
     ClienteDTO clienteDTO = new ClienteDTO();
     ClienteCTR clienteCTR = new ClienteCTR();
-    
+
     DefaultTableModel modeloJtlConsultarCliente;
     int gravar_alterar;
     ResultSet rs;
@@ -31,17 +35,20 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     /**
      * Creates new form ClienteVIEW
      */
-    public ClienteVIEW() {
+    public ClienteVIEW() throws ParseException {
         initComponents();
         this.liberaCampos(false);
         this.liberaBotoes(true, false, false, false, true);
         this.gravar_alterar = 1;
         modeloJtlConsultarCliente = (DefaultTableModel) this.jtl_consultar_cliente.getModel();
+
+        this.cpf = new JFormattedTextField(new MaskFormatter("##########"));
+        this.data_nascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
+        this.telefone = new JFormattedTextField(new MaskFormatter("(##)#####-####"));
     }
 
     public void setPosition() {
         Dimension d = this.getDesktopPane().getSize();
-
         this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
     }
 
@@ -364,11 +371,15 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_nomeActionPerformed
 
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-
+        this.liberaCampos(true);
+        this.liberaBotoes(false, true, true, false, true);
     }//GEN-LAST:event_btnNovoActionPerformed
 
     private void jtl_consultar_clienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtl_consultar_clienteMouseClicked
-
+        this.preencherCampos(Integer.parseInt(String.valueOf(
+                this.jtl_consultar_cliente.getValueAt(this.jtl_consultar_cliente.getSelectedRow(), 0))
+        ));
+        this.liberaBotoes(false, true, true, true, true);
     }//GEN-LAST:event_jtl_consultar_clienteMouseClicked
 
     private void nomeConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nomeConsultaActionPerformed
@@ -376,11 +387,16 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_nomeConsultaActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        this.preencherTabela(this.nomeConsulta.getText().toUpperCase());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        this.excluir();
+        this.limpaCampos();
+        this.liberaCampos(false);
+        this.liberaBotoes(true, false, false, false, true);
+        this.modeloJtlConsultarCliente.setNumRows(0);
+        this.gravar_alterar = 1;
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
@@ -388,54 +404,71 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSairActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        if (this.gravar_alterar == 1) {
+            this.gravar();
+            this.gravar_alterar = 0;
+        } else if (this.gravar_alterar == 2) {
+            this.alterar();
+            this.gravar_alterar = 0;
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro no sistema, tente novamente.");
+        }
 
+        this.limpaCampos();
+        this.liberaCampos(false);
+        this.liberaBotoes(true, true, true, true, false);
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        this.limpaCampos();
+        this.liberaCampos(false);
+        this.modeloJtlConsultarCliente.setNumRows(0);
+        this.liberaBotoes(true, false, false, false, true);
+        this.gravar_alterar = 1;
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-        private void alterar(){
+    private void alterar() {
         try {
             clienteDTO.setNome(this.nome.getText());
             clienteDTO.setCpf(this.cpf.getText());
             clienteDTO.setEmail(this.email.getText());
             clienteDTO.setTelefone(this.telefone.getText());
             clienteDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
-            
-            JOptionPane.showMessageDialog(null, 
+
+            JOptionPane.showMessageDialog(null,
                     this.clienteCTR.alterar(clienteDTO));
-        } catch(Exception e){
-            System.out.println("Erro alterar()"+ e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erro alterar()" + e.getMessage());
         }
     }
-    private void excluir(){
-        if(JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?", "Aviso", 
-                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+
+    private void excluir() {
+        if (JOptionPane.showConfirmDialog(null, "Deseja realmente excluir o cliente?", "Aviso",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             JOptionPane.showMessageDialog(null, this.clienteCTR.deletar(clienteDTO));
         }
     }
-    
-    private void preencherTabela(String nome){
+
+    private void preencherTabela(String nome) {
         try {
             this.modeloJtlConsultarCliente.setNumRows(0);
-            
+
             clienteDTO.setNome(nome);
             rs = clienteCTR.consultar(clienteDTO, 1);
-            
-            while(rs.next()){
-                this.modeloJtlConsultarCliente.addRow(new Object[] {
+
+            while (rs.next()) {
+                this.modeloJtlConsultarCliente.addRow(new Object[]{
                     rs.getString("id_cliente"),
                     rs.getString("nome")
                 });
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Erro preencherTabela(): " + e.getMessage());
-        } finally{
+        } finally {
             clienteCTR.CloseDB();
         }
     }
-    
+
     private void preencherCampos(int id_cliente) {
         try {
             this.clienteDTO.setId_cliente(id_cliente);
@@ -444,11 +477,11 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
                 this.limpaCampos();
 
                 this.nome.setText(rs.getString("nome"));
-                this.cpf.setText(rs.getString("cep"));
+                this.cpf.setText(rs.getString("cpf"));
                 this.telefone.setText(rs.getString("telefone"));
                 this.data_nascimento.setText(rs.getString("data_nascimento"));
                 this.email.setText(rs.getString("email"));
-                
+
                 this.clienteDTO.setId_cliente(Integer.parseInt(rs.getString("id_cliente")));
 
                 this.gravar_alterar = 2;

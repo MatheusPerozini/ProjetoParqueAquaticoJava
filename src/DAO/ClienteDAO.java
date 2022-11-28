@@ -59,7 +59,7 @@ public class ClienteDAO implements BasicDAO<ClienteDTO> {
             switch (opcao) {
                 case 1:
                     comando = "select c.* from cliente c "
-                            + "where nome like '" + clienteDTO.getNome() + "%' "
+                            + "where nome ilike '" + clienteDTO.getNome() + "%' "
                             + "order by c.nome";
                     break;
                 case 2:

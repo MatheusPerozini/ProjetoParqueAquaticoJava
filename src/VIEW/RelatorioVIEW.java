@@ -5,6 +5,14 @@
 package VIEW;
 
 import java.awt.Dimension;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.time.LocalDateTime;
+
+import CTR.RelatorioCTR;
+import CTR.FuncionarioCTR;
 
 /**
  *
@@ -12,16 +20,26 @@ import java.awt.Dimension;
  */
 public class RelatorioVIEW extends javax.swing.JInternalFrame {
 
+    RelatorioCTR relatorioCTR = new RelatorioCTR();
+    FuncionarioCTR funcionarioCTR = new FuncionarioCTR();
+
+    SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
+    ResultSet rs;
+
+    DefaultTableModel modelo_jtl_clienteFuncionario;
+    DefaultTableModel modelo_jtl_clienteData;
+
     /**
      * Creates new form RelatorioVIEW
      */
     public RelatorioVIEW() {
         initComponents();
+        modelo_jtl_clienteFuncionario = (DefaultTableModel) this.jtl_clientesFuncionario.getModel();
+        modelo_jtl_clienteData = (DefaultTableModel) this.jtl_clientesDate.getModel();
     }
-    
+
     public void setPosition() {
         Dimension d = this.getDesktopPane().getSize();
-
         this.setLocation((d.width - this.getSize().width) / 2, (d.height - this.getSize().height) / 2);
     }
 
@@ -35,24 +53,29 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnGerar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        btnSair = new javax.swing.JButton();
+        numeroTotalClientes = new javax.swing.JTextField();
+        numeroTotalFuncionarios = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jtl_clientesDate = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jtl_clientesFuncionario = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel1.setText("Relatórios");
 
-        jButton1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jButton1.setText("Gerar");
+        btnGerar.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        btnGerar.setText("Gerar");
+        btnGerar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerarActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel2.setText("Número Total de Clientes:");
@@ -60,21 +83,21 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
         jLabel5.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel5.setText("Clientes por Funcionário");
 
-        jButton2.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
-        jButton2.setText("Sair");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnSair.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
+        btnSair.setText("Sair");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnSairActionPerformed(evt);
             }
         });
 
-        jTextField1.setEditable(false);
-        jTextField1.setForeground(new java.awt.Color(204, 204, 204));
+        numeroTotalClientes.setEditable(false);
+        numeroTotalClientes.setForeground(new java.awt.Color(204, 204, 204));
 
-        jTextField2.setEditable(false);
-        jTextField2.setForeground(new java.awt.Color(204, 204, 204));
+        numeroTotalFuncionarios.setEditable(false);
+        numeroTotalFuncionarios.setForeground(new java.awt.Color(204, 204, 204));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtl_clientesDate.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -82,9 +105,9 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                 "Data", "Qtd. Clientes"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jtl_clientesDate);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jtl_clientesFuncionario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -92,7 +115,7 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                 "Funcionário", "Qtd. Clientes"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(jtl_clientesFuncionario);
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
         jLabel6.setText("Número Total de Funcionários:");
@@ -113,12 +136,12 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                         .addGap(44, 44, 44)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(numeroTotalFuncionarios, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(82, 82, 82)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(numeroTotalClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -134,9 +157,9 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                 .addGap(48, 48, 48))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnGerar, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(173, 173, 173))
         );
         layout.setVerticalGroup(
@@ -146,11 +169,11 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numeroTotalClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(numeroTotalFuncionarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -162,22 +185,75 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnGerar)
+                    .addComponent(btnSair))
                 .addGap(23, 23, 23))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
 
+    private void btnGerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarActionPerformed
+        this.numeroTotalClientes.setText(String.valueOf(this.relatorioCTR.retornarNumeroClienteTotais()));
+        this.numeroTotalFuncionarios.setText(String.valueOf(this.relatorioCTR.retornarNumeroFuncionarioTotais()));
+        this.getNumeroDeClientePorData();
+        this.getNumeroDeClientesPorFuncionario();
+    }//GEN-LAST:event_btnGerarActionPerformed
+
+    private void getNumeroDeClientesPorFuncionario() {
+        try {
+            this.modelo_jtl_clienteFuncionario.setRowCount(0);
+            rs = funcionarioCTR.consultar(null, 3);
+            while (rs.next()) {
+                String nomeFuncionario = rs.getString("nome");
+                int numeroClienteFuncionario = relatorioCTR.retornarNumeroDeClientesPorFuncionario(
+                        Integer.parseInt(rs.getString("id_funcionario")));
+                this.modelo_jtl_clienteFuncionario.addRow(new Object[]{
+                    nomeFuncionario,
+                    numeroClienteFuncionario
+                });
+            }
+        } catch (Exception err) {
+            System.out.println("RelatorioVIEW.getNumeroDeClientesPorFuncionario: " + err.getMessage());
+            JOptionPane.showMessageDialog(null, "Não foi retornar dados");
+        }
+
+    }
+
+    private void getNumeroDeClientePorData() {
+        this.modelo_jtl_clienteData.setNumRows(0);
+        
+        int mesAtual = LocalDateTime.now().getMonthValue();
+        int anoAtual = LocalDateTime.now().getYear();
+
+        for (int i = 0; 6 >  i; i++) {
+            int mesPesquisaFim = mesAtual - i;
+            int mesPesquisaInicio = mesPesquisaFim - 1;
+            int anoPesquisa = anoAtual;
+            if (mesPesquisaInicio == 0) {
+                anoPesquisa -= 1;
+                mesPesquisaInicio = 12;
+            }
+            if (mesPesquisaFim == 0) {
+                anoPesquisa -= 1;
+                mesPesquisaFim = 12;
+            }
+            String data = mesPesquisaFim + "/" + anoPesquisa;
+            int numeroClientes = relatorioCTR.retornarNumeroDeClientesPorMesEAno(mesPesquisaInicio, mesPesquisaFim, anoPesquisa);
+            this.modelo_jtl_clienteData.addRow(new Object[]{
+                data,
+                numeroClientes
+            });
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnGerar;
+    private javax.swing.JButton btnSair;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
@@ -185,9 +261,9 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable jtl_clientesDate;
+    private javax.swing.JTable jtl_clientesFuncionario;
+    private javax.swing.JTextField numeroTotalClientes;
+    private javax.swing.JTextField numeroTotalFuncionarios;
     // End of variables declaration//GEN-END:variables
 }

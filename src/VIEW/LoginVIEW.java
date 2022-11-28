@@ -6,6 +6,7 @@ package VIEW;
 
 import CTR.FuncionarioCTR;
 import DTO.FuncionarioDTO;
+
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
@@ -15,6 +16,8 @@ import javax.swing.JOptionPane;
  */
 public class LoginVIEW extends javax.swing.JFrame {
 
+    FuncionarioCTR funcionarioCTR = new FuncionarioCTR();
+
     /**
      * Creates new form IndexVIEW
      */
@@ -23,9 +26,6 @@ public class LoginVIEW extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
 
-    FuncionarioCTR funcionarioCTR = new FuncionarioCTR();
-    
-    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -60,6 +60,11 @@ public class LoginVIEW extends javax.swing.JFrame {
                 cpfActionPerformed(evt);
             }
         });
+        cpf.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cpfKeyPressed(evt);
+            }
+        });
 
         botaoEntrar.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
         botaoEntrar.setText("Entrar");
@@ -86,6 +91,11 @@ public class LoginVIEW extends javax.swing.JFrame {
         });
 
         senha.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        senha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senhaKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -113,9 +123,9 @@ public class LoginVIEW extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1)
-                    .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cpf, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -153,10 +163,6 @@ public class LoginVIEW extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cpfActionPerformed
-
     private void botaoEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEntrarActionPerformed
         if (this.loginFuncionario()) {
             new IndexVIEW().setVisible(true);
@@ -175,7 +181,7 @@ public class LoginVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoEntrarKeyTyped
 
     private void botaoEntrarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_botaoEntrarKeyPressed
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (this.loginFuncionario()) {
                 new IndexVIEW().setVisible(true);
                 this.dispose();
@@ -185,17 +191,45 @@ public class LoginVIEW extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_botaoEntrarKeyPressed
 
+    private void senhaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (this.loginFuncionario()) {
+                new IndexVIEW().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF ou Senha incorretos");
+            }
+        }
+    }//GEN-LAST:event_senhaKeyPressed
+
+    private void cpfKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cpfKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (this.loginFuncionario()) {
+                new IndexVIEW().setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "CPF ou Senha incorretos");
+            }
+        }
+    }//GEN-LAST:event_cpfKeyPressed
+
+    private void cpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cpfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cpfActionPerformed
+
     private boolean loginFuncionario() {
         FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
         funcionarioDTO.setCpf(cpf.getText());
         funcionarioDTO.setSenha(senha.getText());
         int id_funcionario_logado = funcionarioCTR.loginFuncionario(funcionarioDTO);
+        System.out.println("VIEW.LoginVIEW.loginFuncionario(): " + id_funcionario_logado);
         if (id_funcionario_logado == 0) {
             return false;
         }
         FuncionarioDTO.id_funcionario_logado = id_funcionario_logado;
         return true;
     }
+
     /**
      * @param args the command line arguments
      */
