@@ -10,12 +10,8 @@ import DTO.FuncionarioDTO;
 import java.awt.Dimension;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
-import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
-import java.text.ParseException;
 
 /**
  *
@@ -25,20 +21,17 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
 
     FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
     FuncionarioCTR funcionarioCTR = new FuncionarioCTR();
+    
     SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
-
     int gravar_alterar;
     ResultSet rs;
     DefaultTableModel modelo_jtl_consultar_funcionario;
 
-    public FuncionarioVIEW() throws ParseException {
+    public FuncionarioVIEW() {
         initComponents();
         liberaCampos(false);
         liberaBotoes(true, false, false, false, true);
         modelo_jtl_consultar_funcionario = (DefaultTableModel) this.jtl_consultar_funcionario.getModel();
-
-        this.dataNascFuncionario = new JFormattedTextField(new MaskFormatter("##/##/####"));
-        this.cpfFuncionario = new JFormattedTextField(new MaskFormatter("##########"));
     }
 
     public void setPosition() {
@@ -51,7 +44,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
             funcionarioDTO.setNome(nomeFuncionario.getText());
             funcionarioDTO.setCpf(cpfFuncionario.getText());
             funcionarioDTO.setSenha(senhaFuncionario.getText());
-            funcionarioDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(dataNascFuncionario.getText()));
+            funcionarioDTO.setData_nascimento(date.parse(dataNascFuncionario.getText()));
 
             JOptionPane.showMessageDialog(null, funcionarioCTR.inserir(funcionarioDTO));
 
@@ -65,7 +58,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
             funcionarioDTO.setNome(nomeFuncionario.getText());
             funcionarioDTO.setCpf(cpfFuncionario.getText());
             funcionarioDTO.setSenha(senhaFuncionario.getText());
-            funcionarioDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(dataNascFuncionario.getText()));
+            funcionarioDTO.setData_nascimento(date.parse(dataNascFuncionario.getText()));
 
             JOptionPane.showMessageDialog(null, funcionarioCTR.inserir(funcionarioDTO));
 
@@ -106,7 +99,9 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
                 nomeFuncionario.setText(rs.getString("nome"));
                 cpfFuncionario.setText(rs.getString("cpf"));
                 senhaFuncionario.setText(rs.getString("senha"));
-                dataNascFuncionario.setText(rs.getString("data_nascimento"));
+                String anoMesDia[] = new String[3];
+                anoMesDia = rs.getString("data_nascimento").split("-");
+                this.dataNascFuncionario.setText(anoMesDia[2] + "/" + anoMesDia[1] + "/" + anoMesDia[0]);
 
                 gravar_alterar = 2;
                 liberaCampos(true);

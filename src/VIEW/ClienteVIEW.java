@@ -10,10 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.ResultSet;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTextField;
-import javax.swing.text.MaskFormatter;
-import java.text.ParseException;
 
 import CTR.ClienteCTR;
 import DTO.ClienteDTO;
@@ -28,6 +24,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     ClienteDTO clienteDTO = new ClienteDTO();
     ClienteCTR clienteCTR = new ClienteCTR();
 
+    SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
     DefaultTableModel modeloJtlConsultarCliente;
     int gravar_alterar;
     ResultSet rs;
@@ -35,16 +32,12 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
     /**
      * Creates new form ClienteVIEW
      */
-    public ClienteVIEW() throws ParseException {
+    public ClienteVIEW() {
         initComponents();
         this.liberaCampos(false);
         this.liberaBotoes(true, false, false, false, true);
         this.gravar_alterar = 1;
         modeloJtlConsultarCliente = (DefaultTableModel) this.jtl_consultar_cliente.getModel();
-
-        this.cpf = new JFormattedTextField(new MaskFormatter("##########"));
-        this.data_nascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
-        this.telefone = new JFormattedTextField(new MaskFormatter("(##)#####-####"));
     }
 
     public void setPosition() {
@@ -433,7 +426,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
             clienteDTO.setCpf(this.cpf.getText());
             clienteDTO.setEmail(this.email.getText());
             clienteDTO.setTelefone(this.telefone.getText());
-            clienteDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
+            clienteDTO.setData_nascimento(date.parse(data_nascimento.getText()));
 
             JOptionPane.showMessageDialog(null,
                     this.clienteCTR.alterar(clienteDTO));
@@ -478,8 +471,10 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
 
                 this.nome.setText(rs.getString("nome"));
                 this.cpf.setText(rs.getString("cpf"));
-                this.telefone.setText(rs.getString("telefone"));
-                this.data_nascimento.setText(rs.getString("data_nascimento"));
+                this.telefone.setText(rs.getString("telefone"));                
+                String anoMesDia[] = new String[3];
+                anoMesDia = rs.getString("data_nascimento").split("-");
+                this.data_nascimento.setText(anoMesDia[2] + "/" + anoMesDia[1] + "/" + anoMesDia[0]);
                 this.email.setText(rs.getString("email"));
 
                 this.clienteDTO.setId_cliente(Integer.parseInt(rs.getString("id_cliente")));
@@ -500,7 +495,7 @@ public class ClienteVIEW extends javax.swing.JInternalFrame {
             clienteDTO.setCpf(this.cpf.getText());
             clienteDTO.setEmail(this.email.getText());
             clienteDTO.setTelefone(this.telefone.getText());
-            clienteDTO.setData_nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(data_nascimento.getText()));
+            clienteDTO.setData_nascimento(date.parse(data_nascimento.getText()));
             clienteDTO.setId_funcionario(FuncionarioDTO.id_funcionario_logado);
             JOptionPane.showMessageDialog(null, clienteCTR.inserir(clienteDTO));
         } catch (Exception e) {
