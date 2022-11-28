@@ -21,7 +21,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
 
     FuncionarioDTO funcionarioDTO = new FuncionarioDTO();
     FuncionarioCTR funcionarioCTR = new FuncionarioCTR();
-    
+
     SimpleDateFormat date = new SimpleDateFormat("dd/MM/yyyy");
     int gravar_alterar;
     ResultSet rs;
@@ -45,9 +45,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
             funcionarioDTO.setCpf(cpfFuncionario.getText());
             funcionarioDTO.setSenha(senhaFuncionario.getText());
             funcionarioDTO.setData_nascimento(date.parse(dataNascFuncionario.getText()));
-
             JOptionPane.showMessageDialog(null, funcionarioCTR.inserir(funcionarioDTO));
-
         } catch (Exception e) {
             System.out.println("Erro ao Gravar" + e.getMessage());
         }
@@ -56,12 +54,10 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
     public void alterar() {
         try {
             funcionarioDTO.setNome(nomeFuncionario.getText());
-            funcionarioDTO.setCpf(cpfFuncionario.getText());
             funcionarioDTO.setSenha(senhaFuncionario.getText());
             funcionarioDTO.setData_nascimento(date.parse(dataNascFuncionario.getText()));
-
-            JOptionPane.showMessageDialog(null, funcionarioCTR.inserir(funcionarioDTO));
-
+            this.modelo_jtl_consultar_funcionario.setNumRows(0);
+            JOptionPane.showMessageDialog(null, funcionarioCTR.alterar(funcionarioDTO));
         } catch (Exception e) {
             funcionarioCTR.alterar(funcionarioDTO);
         }
@@ -94,20 +90,18 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
             funcionarioDTO.setId_funcionario(id_funcionario);
             rs = funcionarioCTR.consultar(funcionarioDTO, 2);
             if (rs.next()) {
-
                 limpaCampos();
                 nomeFuncionario.setText(rs.getString("nome"));
                 cpfFuncionario.setText(rs.getString("cpf"));
-                senhaFuncionario.setText(rs.getString("senha"));
                 String anoMesDia[] = new String[3];
                 anoMesDia = rs.getString("data_nascimento").split("-");
                 this.dataNascFuncionario.setText(anoMesDia[2] + "/" + anoMesDia[1] + "/" + anoMesDia[0]);
-
-                gravar_alterar = 2;
+                this.gravar_alterar = 2;
                 liberaCampos(true);
             }
 
         } catch (Exception e) {
+            System.out.println("VIEW.FuncionarioVIEW.preencheCampos(): " + e.getMessage());
         }
     }
 
@@ -130,7 +124,6 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
                     rs.getString("id_funcionario"),
                     rs.getString("nome"),});
             }
-
         } catch (Exception erTab) {
             System.out.println("Erro SQL: " + erTab);
         } finally {
@@ -151,7 +144,6 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         nomeFuncionario = new javax.swing.JTextField();
         cpfFuncionario = new javax.swing.JTextField();
-        senhaFuncionario = new javax.swing.JTextField();
         dataNascFuncionario = new javax.swing.JFormattedTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -162,6 +154,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
         btnExcluir = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
+        senhaFuncionario = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         nomeConsulta = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
@@ -272,6 +265,12 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
+        senhaFuncionario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                senhaFuncionarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -294,11 +293,10 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(nomeFuncionario, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                .addComponent(cpfFuncionario))
-                            .addComponent(senhaFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(nomeFuncionario, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(cpfFuncionario)
+                            .addComponent(senhaFuncionario))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -314,16 +312,16 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
                     .addComponent(cpfFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
-                    .addComponent(senhaFuncionario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(11, 11, 11)
+                    .addComponent(senhaFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(dataNascFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -364,6 +362,11 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jtl_consultar_funcionario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtl_consultar_funcionarioMouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jtl_consultar_funcionario);
@@ -435,13 +438,13 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_nomeFuncionarioActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        if (gravar_alterar == 1) {
-            gravar();
-            gravar_alterar = 0;
+        if (this.gravar_alterar == 1) {
+            this.gravar();
+            this.gravar_alterar = 0;
         } else {
-            if (gravar_alterar == 2) {
-                alterar();
-                gravar_alterar = 0;
+            if (this.gravar_alterar == 2) {
+                this.alterar();
+                this.gravar_alterar = 0;
             } else {
                 JOptionPane.showMessageDialog(null, "Erro no sistema! ");
             }
@@ -485,6 +488,18 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
 
     }//GEN-LAST:event_nomeConsultaActionPerformed
 
+    private void jtl_consultar_funcionarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtl_consultar_funcionarioMouseClicked
+        this.preencheCampos(Integer.parseInt(String.valueOf(
+                this.jtl_consultar_funcionario.getValueAt(this.jtl_consultar_funcionario.getSelectedRow(), 0))
+        ));
+        this.liberaBotoes(false, true, true, true, true);
+        this.cpfFuncionario.setEnabled(false);
+    }//GEN-LAST:event_jtl_consultar_funcionarioMouseClicked
+
+    private void senhaFuncionarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_senhaFuncionarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_senhaFuncionarioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
@@ -508,6 +523,6 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
     private javax.swing.JTable jtl_consultar_funcionario;
     private javax.swing.JTextField nomeConsulta;
     private javax.swing.JTextField nomeFuncionario;
-    private javax.swing.JTextField senhaFuncionario;
+    private javax.swing.JPasswordField senhaFuncionario;
     // End of variables declaration//GEN-END:variables
 }

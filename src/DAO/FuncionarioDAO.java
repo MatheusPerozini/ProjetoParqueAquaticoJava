@@ -88,6 +88,11 @@ public class FuncionarioDAO implements BasicDAO<FuncionarioDTO> {
                     + "data_nascimento = " + "'" + date.format(funcionario.getData_nascimento()) + "'" + ", "
                     + "senha = " + "'" + HashSenhaDAO.generateSecurePassword(funcionario.getSenha(), senheSaltValue)
                     + "' where id_funcionario = " + funcionario.getId_funcionario();
+            if (funcionario.getSenha() == null || funcionario.getSenha().isEmpty()) {
+                comando = "update funcionario set " + "nome = " + "'" + funcionario.getNome() + "'" + ", "
+                        + "data_nascimento = " + "'" + date.format(funcionario.getData_nascimento())
+                        + "' where id_funcionario = " + funcionario.getId_funcionario();
+            }
             stmt.execute(comando.toUpperCase());
             ConexaoDAO.con.commit();
             stmt.close();
