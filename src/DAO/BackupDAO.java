@@ -79,7 +79,7 @@ public class BackupDAO {
         } else if (response == JOptionPane.YES_OPTION) {
             System.out.println(System.getProperty("os.name"));
             if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
-                BackupDAO.executeCommand("Compress-Archive C:/parqueAquatico/ C:/parqueAquatico/parqueAquatico.zip");
+                BackupDAO.executeCommand("Compress-Archive -Path C:/parqueAquatico/ -DestinationPath C:/parqueAquatico/parqueAquatico.zip");
             } else {
                 BackupDAO.executeCommand("zip -r /parqueAquatico/parqueAquatico.zip /parqueAquatico/");
             }
@@ -99,7 +99,7 @@ public class BackupDAO {
             JOptionPane.getDefaultLocale();
         } else if (response == JOptionPane.YES_OPTION) {
             if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
-                BackupDAO.executeCommand("Expand-Archive C:/parqueAquatico/parqueAquatico.zip -d /");
+                BackupDAO.executeCommand("Expand-Archive -Path C:/parqueAquatico/parqueAquatico.zip");
             } else {
                 BackupDAO.executeCommand("unzip -o /parqueAquatico/parqueAquatico.zip -d /");
             }

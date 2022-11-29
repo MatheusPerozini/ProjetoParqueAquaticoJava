@@ -15,7 +15,7 @@ public class ConexaoDAO {
 		try {
 			String dsn = "ProjetoParqueAquatico";
 			String user = "postgres";
-			String senha = "postdba";
+			String senha = "root";
 
 			DriverManager.registerDriver(new org.postgresql.Driver());
 
