@@ -222,7 +222,6 @@ public class LoginVIEW extends javax.swing.JFrame {
         funcionarioDTO.setCpf(cpf.getText());
         funcionarioDTO.setSenha(senha.getText());
         int id_funcionario_logado = funcionarioCTR.loginFuncionario(funcionarioDTO);
-        System.out.println("VIEW.LoginVIEW.loginFuncionario(): " + id_funcionario_logado);
         if (id_funcionario_logado == 0) {
             return false;
         }

@@ -66,6 +66,8 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
 
+        setTitle("Gerador de Relatório");
+
         jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel1.setText("Relatórios");
 
@@ -92,10 +94,13 @@ public class RelatorioVIEW extends javax.swing.JInternalFrame {
         });
 
         numeroTotalClientes.setEditable(false);
-        numeroTotalClientes.setForeground(new java.awt.Color(204, 204, 204));
+        numeroTotalClientes.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        numeroTotalClientes.setForeground(new java.awt.Color(0, 0, 0));
+        numeroTotalClientes.setToolTipText("");
 
         numeroTotalFuncionarios.setEditable(false);
-        numeroTotalFuncionarios.setForeground(new java.awt.Color(204, 204, 204));
+        numeroTotalFuncionarios.setFont(new java.awt.Font("Arial Black", 0, 14)); // NOI18N
+        numeroTotalFuncionarios.setForeground(new java.awt.Color(0, 0, 0));
 
         jtl_clientesDate.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

@@ -28,8 +28,10 @@ public class BackupDAO {
      */
     public static void executeCommand(final String command) throws IOException {
         final ArrayList<String> commands = new ArrayList<String>();
-        commands.add("/bin/bash");
-        commands.add("-c");
+        if (System.getProperty("os.name").toLowerCase().indexOf("win") < 0) {
+            commands.add("/bin/bash");
+            commands.add("-c");
+        }
         commands.add(command);
         BufferedReader br = null;
         try {

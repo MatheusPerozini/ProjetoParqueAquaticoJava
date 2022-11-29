@@ -51,7 +51,13 @@ public class IndexVIEW extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        desktopPane = new javax.swing.JDesktopPane();
+        ImageIcon imageicon = new ImageIcon(getClass().getResource("imagens/water_park.jpg"));
+        Image image = imageicon.getImage();
+        desktopPane = new javax.swing.JDesktopPane() {
+            public void paintComponent(Graphics graphics){
+                graphics.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         gerenciarFuncionario = new javax.swing.JMenuItem();
@@ -72,7 +78,7 @@ public class IndexVIEW extends javax.swing.JFrame {
         );
         desktopPaneLayout.setVerticalGroup(
             desktopPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 416, Short.MAX_VALUE)
+            .addGap(0, 460, Short.MAX_VALUE)
         );
 
         jMenuBar1.setFont(new java.awt.Font("Arial", 0, 18)); // NOI18N
@@ -174,7 +180,9 @@ public class IndexVIEW extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(desktopPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
