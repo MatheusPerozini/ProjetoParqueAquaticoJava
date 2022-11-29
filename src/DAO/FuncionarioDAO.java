@@ -26,7 +26,7 @@ public class FuncionarioDAO implements BasicDAO<FuncionarioDTO> {
         try {
             ConexaoDAO.conectDb();
             stmt = ConexaoDAO.con.createStatement();
-            String comando = "insert into funcionario " + "(nome, cpf, data_nascimento, senha) values " + "(" + "'"
+            String comando = "insert into funcionario (nome, cpf, data_nascimento, senha) values " + "('"
                     + funcionario.getNome() + "'" + "," + "'" + funcionario.getCpf() + "'" + ", " + "to_date('"
                     + date.format(funcionario.getData_nascimento()) + "', 'dd/mm/yyyy'), " + "'"
                     + HashSenhaDAO.generateSecurePassword(funcionario.getSenha(), senheSaltValue) + "'" + " )";

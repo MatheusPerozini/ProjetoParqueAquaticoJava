@@ -42,6 +42,7 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
     public void gravar() {
         try {
             funcionarioDTO.setNome(nomeFuncionario.getText());
+            System.out.println(funcionarioDTO.getNome());
             funcionarioDTO.setCpf(cpfFuncionario.getText());
             funcionarioDTO.setSenha(senhaFuncionario.getText());
             funcionarioDTO.setData_nascimento(date.parse(dataNascFuncionario.getText()));
