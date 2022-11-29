@@ -171,7 +171,6 @@ public class FuncionarioVIEW extends javax.swing.JInternalFrame {
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setText("Nome:");
 
-        nomeFuncionario.setText(" ");
         nomeFuncionario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nomeFuncionarioActionPerformed(evt);

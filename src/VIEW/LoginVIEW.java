@@ -44,6 +44,7 @@ public class LoginVIEW extends javax.swing.JFrame {
         cpf = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Water Park Admin");
 
         jLabel3.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
         jLabel3.setText("Login de Funcionário");

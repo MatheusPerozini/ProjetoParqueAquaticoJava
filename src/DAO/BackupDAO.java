@@ -31,6 +31,8 @@ public class BackupDAO {
         if (System.getProperty("os.name").toLowerCase().indexOf("win") < 0) {
             commands.add("/bin/bash");
             commands.add("-c");
+        } else {
+            commands.add("powershell.exe");
         }
         commands.add(command);
         BufferedReader br = null;
@@ -99,7 +101,7 @@ public class BackupDAO {
             JOptionPane.getDefaultLocale();
         } else if (response == JOptionPane.YES_OPTION) {
             if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
-                BackupDAO.executeCommand("Expand-Archive -Path C:/parqueAquatico/parqueAquatico.zip");
+                BackupDAO.executeCommand("Expand-Archive -Path C:/parqueAquatico/parqueAquatico.zip -DestinationPath C:/parqueAquatico");
             } else {
                 BackupDAO.executeCommand("unzip -o /parqueAquatico/parqueAquatico.zip -d /");
             }
